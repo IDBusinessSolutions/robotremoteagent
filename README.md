@@ -35,3 +35,5 @@ python build.py
 
 in the robotremoteagent directory on your machine.
 
+Once the build is complete, the package subdirectory contains a pip installable package of the agent.
+

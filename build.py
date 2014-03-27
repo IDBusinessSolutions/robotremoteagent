@@ -24,6 +24,8 @@ import robot.libdoc as libdoc
 #name and package dir
 library_name = 'RobotRemoteAgent'
 packages_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),'package'))
+if not os.path.exists(packages_dir):
+    os.makedirs(packages_dir)
 
 # Make sure no old jar files of xml files are in the lib directory
 for file_name in os.listdir(os.path.join(os.path.dirname(__file__),'src-python',library_name,'lib')):
