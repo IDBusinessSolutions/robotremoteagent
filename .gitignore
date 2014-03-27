@@ -5,3 +5,7 @@
 *.war
 *.ear
 *.pyc
+dependency-reduced-pom.xml
+*.zip
+target/maven-archiver/pom.properties
+*.lst
