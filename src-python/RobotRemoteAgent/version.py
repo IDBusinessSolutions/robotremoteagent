@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-VERSION = '1.2.1'
+VERSION = '1.2.2'

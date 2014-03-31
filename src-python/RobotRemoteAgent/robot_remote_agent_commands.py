@@ -246,7 +246,7 @@ class RobotRemoteAgentCommands(object):
         if self._all_gateway_ports.has_key(alias):
             self._port = self._all_gateway_ports[alias]
         else:
-            raise IOError("Unknown application alias {0}.".format(alias))
+            raise RuntimeError("Unknown application alias {0}.".format(alias))
 
     def java_application_is_closed(self, alias):
         """Informs the system, that a connected Java application should be closed and can't be connected to anymore.
@@ -265,7 +265,7 @@ class RobotRemoteAgentCommands(object):
             del self._all_gateway_ports[alias]
             self._all_gateway_ports.sync()
         else:
-            raise IOError("Unknown application alias {0}.".format(alias))
+            raise RuntimeError("Unknown application alias {0}.".format(alias))
 
     def _check_current_java_application_is_connected(self):
         return self._check_java_application_is_available_on_port(self._port)
@@ -286,6 +286,37 @@ class RobotRemoteAgentCommands(object):
         except:
             return False
         return True
+
+    def wait_for_current_java_application_to_close(self, timeout="3 Minutes"):
+        """Waits for the currently connected Java application to shut down.\n\n
+        *Arguments*\n
+        _timeout_\n
+        (optional) maximum wait time (default: 3 Minutes).\n\n
+        *Return value*\n
+        None\n\n
+        *Precondition*\n
+        None\n\n
+        *Example*
+        | Wait for current Java Application to Close |  |
+        | Wait for current Java Application to Close  | timeout=5 Minutes |
+        """
+        start_time = datetime.datetime.now()
+        timeout_in_seconds = utils.timestr_to_secs(timeout)
+        has_timed_out = False
+        while self._check_java_application_is_available_on_port(self._port) and not has_timed_out:
+            if (datetime.datetime.now() - start_time).seconds > timeout_in_seconds:
+                has_timed_out = True
+            else:
+                time.sleep(3)
+
+        if has_timed_out:
+            raise RuntimeError("Timeout waiting for Java application to close.")
+        for alias, port in self._all_gateway_ports.items():
+            if port==self._port:
+                del self._all_gateway_ports[alias]
+        self._port = None
+        self._all_gateway_ports.sync()
+
 
     def connect_to_java_application(self, alias, timeout="3 Minutes"):
         """Connects to an already running Java application and registers it with the specified alias.\n
@@ -327,7 +358,7 @@ class RobotRemoteAgentCommands(object):
                 has_timed_out = True
 
         if has_timed_out:
-            raise IOError("Timeout connecting to java application.")
+            raise RuntimeError("Timeout connecting to java application.")
         else:
             logger.info("Connected to java application on port {0}.".format(port))
         self._port = port
