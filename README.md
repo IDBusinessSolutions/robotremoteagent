@@ -8,7 +8,7 @@ Build pre-requisites
 
 The Java part of the tool needs to be built using Maven with the Python 2.7 part requiring Python to be installed.
 
-In order to work in a WebStart environment, the JAR injected into the application being tested needs to be signed. This is included in teh pom.xml, but relies keystore information from your maven settings.xml in the .m2 directory.
+In order to work in a WebStart environment, the JAR injected into the application being tested needs to be signed. This is included in the pom.xml, but relies keystore information from your maven settings.xml in the .m2 directory.
 
 The settings.xml file should contain the following sections:
 
