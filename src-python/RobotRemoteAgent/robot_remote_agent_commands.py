@@ -346,13 +346,14 @@ class RobotRemoteAgentCommands(object):
         while port is None and not has_timed_out:
             try:
                 attempt += 1
-                port_file = open(port_file_path, 'r')
-                port = int(port_file.readline())
-                port_file.close()
+                with open(port_file_path, 'r') as port_file:
+                    port = int(port_file.readline())
                 if not self._check_java_application_is_available_on_port(port):
                     port = None
-            except IOError:
-                # perform an action
+            # IOError happens if the file hasn't been written yet, ValueError is when the file has been created,
+            # but hasn't got any text inside
+            except (IOError, ValueError):
+                # Just wait
                 time.sleep(3)
             if (datetime.datetime.now() - start_time).seconds > timeout_in_seconds:
                 has_timed_out = True
