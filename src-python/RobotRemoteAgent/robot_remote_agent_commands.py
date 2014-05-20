@@ -146,7 +146,7 @@ def _get_robot_dir():
 
 def _start(alias, command):
     # close_fds enables RIDE to shut down without the application being tested shutting down as well
-    subprocess.Popen([command], shell=True, close_fds=True)
+    subprocess.Popen(command, shell=True, close_fds=True)
 
 
 def _get_java_tool_options():
